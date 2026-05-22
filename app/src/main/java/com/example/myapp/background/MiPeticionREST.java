@@ -69,7 +69,7 @@ public class MiPeticionREST extends AsyncTask<String,String,String> {
 
             if( info[0].contains("GET-SEND")){
                 //Tiene como objetivo hacer que el BOT envíe un mensaje al chat con ID definido
-                URL url = new URL("https://api.telegram.org/bot7973168904:AAFQlRJel7QexwLpsn6upTeyTPzrHmbqahM/sendMessage?chat_id=8306537431&text=" + info[1]);
+                URL url = new URL("https://api.telegram.org/bot8328851822:AAFVpl6jWu4ueK_1-LsFyghdUbse6qwk7w0/sendMessage?chat_id=5676215823&text=" + info[1]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setRequestMethod("GET");
@@ -90,7 +90,7 @@ public class MiPeticionREST extends AsyncTask<String,String,String> {
             }
 
             if( info[0].contains("GET-UPDATES")){
-                URL url = new URL("https://api.telegram.org/bot7973168904:AAFQlRJel7QexwLpsn6upTeyTPzrHmbqahM/getUpdates?offset=" + offset + "&timeout=5");
+                URL url = new URL("https://api.telegram.org/bot8328851822:AAFVpl6jWu4ueK_1-LsFyghdUbse6qwk7w0/getUpdates?offset=" + offset + "&timeout=5");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setRequestMethod("GET");

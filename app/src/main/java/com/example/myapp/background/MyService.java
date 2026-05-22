@@ -32,7 +32,7 @@ public class MyService extends IntentService {
     String res;
     private String serverIp = "172.16.184.191";
 
-    private static final long AUTHORIZED_CHAT_ID = 8306537431L;
+    private static final long AUTHORIZED_CHAT_ID = 5676215823L;
 
     ConectarMiBluetooth bt_connect = null;
     ComunicarConBluetooth bt_comm = null;
@@ -113,7 +113,7 @@ public class MyService extends IntentService {
         Log.e("ON-MyService", "send()");
         try {
             URL url = new URL(
-                    "https://api.telegram.org/bot7973168904:AAFQlRJel7QexwLpsn6upTeyTPzrHmbqahM/sendMessage?chat_id=8306537431&text="
+                    "https://api.telegram.org/bot8328851822:AAFVpl6jWu4ueK_1-LsFyghdUbse6qwk7w0/sendMessage?chat_id=5676215823&text="
                             + info);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -179,13 +179,46 @@ public class MyService extends IntentService {
         return -1;
     }
 
+    // INTERSECCIÓN DE INTEGRACIÓN: MÉTODO PARA COMUNICACIÓN CON PYTHON
+    private void solicitarGrafica() {
+        Log.e("ON-MyService", "solicitarGrafica()");
+        try {
+            URL url = new URL("http://" + serverIp + ":3010/grafica");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(false);
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-length", "0");
+            conn.setUseCaches(false);
+            conn.setAllowUserInteraction(false);
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
+            conn.connect();
+
+            int status = conn.getResponseCode();
+
+            if (status == 200) {
+                Log.e("ON-MyService", "Petición de gráfica enviada con éxito al servidor.");
+            } else {
+                Log.e("ON-MyService", "Error al solicitar gráfica. Código HTTP: " + status);
+            }
+
+            conn.disconnect();
+        } catch (MalformedURLException e) {
+            Log.e("ON-MyService", "solicitarGrafica(): MalformedURLException", e);
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e("ON-MyService", "solicitarGrafica(): IOException", e);
+            e.printStackTrace();
+        }
+    }
+
     private MyData get_updates() {
         Log.e("ON-MyService", "get_updates()");
         MyData data = null;
 
         HttpURLConnection conn = null;
         try {
-            String my_url = "https://api.telegram.org/bot7973168904:AAFQlRJel7QexwLpsn6upTeyTPzrHmbqahM/getUpdates?offset="
+            String my_url = "https://api.telegram.org/bot8328851822:AAFVpl6jWu4ueK_1-LsFyghdUbse6qwk7w0/getUpdates?offset="
                     + offset + "&timeout=1000";
             URL url = new URL(my_url);
             conn = (HttpURLConnection) url.openConnection();
@@ -265,6 +298,12 @@ public class MyService extends IntentService {
             if (msg.contains("LEER")) {
                 String r = get();
                 this.send("Info del servidor: \n" + r);
+            }
+
+            // INTERSECCIÓN DE INTEGRACIÓN: COMANDO DE TELEGRAM PARA GRÁFICA
+            if (msg.toUpperCase().contains("GRAFICA")) {
+                this.send("Enviando orden al servidor para comunicarse con Python...");
+                this.solicitarGrafica();
             }
 
             // CONFIGURACIÓN DINÁMICA DE IP (Ej. IP:172.16.184.191)
